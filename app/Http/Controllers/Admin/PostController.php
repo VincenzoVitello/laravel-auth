@@ -15,8 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        return view('admin.posts.index', compact('posts'));
+        $posts = Post::all(); 
+        return view('admin.posts.index', compact('posts')); //pagina in cui verranno mostrati tutti i post
     }
 
     /**
@@ -26,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
