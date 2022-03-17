@@ -37,7 +37,29 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "title" => 'required|min:1|max:50',
+            "content" => 'required',
+        ]);
+
+
+        $data = $request->all();
+        
+        // $tempSlug = Str::slug($data['posts_title'],'-');
+        // $cont = 1;
+        // while (Post::where('slug', $tempSlug)->first()){
+        //     $tempSlug = Str::slug($data['title'],'-')."-".$cont;
+        //     $cont++;
+        // }
+
+        // $data['slug'] = $tempSlug;
+
+        $newPost = new Post();
+        $newPost->fill($data);
+        $newPost->save();
+
+
+        return redirect()->route('admin.posts.show', $newPost->id);
     }
 
     /**
@@ -46,9 +68,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        //
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
