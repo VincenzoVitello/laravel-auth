@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -42,17 +43,16 @@ class PostController extends Controller
             "content" => 'required',
         ]);
 
-
         $data = $request->all();
         
-        // $tempSlug = Str::slug($data['posts_title'],'-');
-        // $cont = 1;
-        // while (Post::where('slug', $tempSlug)->first()){
-        //     $tempSlug = Str::slug($data['title'],'-')."-".$cont;
-        //     $cont++;
-        // }
+            // $tempSlug = Str::slug($data['title'],'-');
+            // $cont = 1;
+            // while (Post::where('slug', $tempSlug)->first()){
+            //     $tempSlug = Str::slug($data['title'],'-')."-".$cont;
+            //     $cont++;
+            // }
 
-        // $data['slug'] = $tempSlug;
+            // $data['slug'] = $tempSlug;
 
         $newPost = new Post();
         $newPost->fill($data);
@@ -79,9 +79,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -91,9 +91,29 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            "title" => 'required|min:1|max:50',
+            "content" => 'required',
+        ]);
+
+
+        $data = $request->all();
+
+        // $tempSlug = Str::slug($data['title'],'-');
+        // $cont = 1;
+        // while (Post::where('slug', $tempSlug)->where('id','!=', $post->id)->first()){
+        //     $tempSlug = Str::slug($data['title'],'-')."-".$cont;
+        //     $cont++;
+        // }
+        // $data['slug'] = $tempSlug;
+
+        $post->fill($data);
+        $post->save();
+
+
+        return redirect()->route('admin.posts.index', $post->id);
     }
 
     /**
@@ -102,8 +122,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('admin.posts.index');
     }
 }
